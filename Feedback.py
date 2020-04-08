@@ -5,7 +5,7 @@ from flask import Flask, Response
 BACKGROUND = (42, 60, 247)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-
+WHITE = (255, 255, 255)
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file):
@@ -48,25 +48,33 @@ class Feedback:
         self._time_active = 0
         self.color = BACKGROUND
 
-    def scan_event(self, color):
+        self.font = pygame.font.Font('freesansbold.ttf',78)
+        self.text = None
+        self.textRec = None
+
+    def scan_event(self,color, text_color, text):
         self.color = color
         self._display_active = True
         self.screen_update()
+        self.text = self.font.render(text, False, text_color)
+        self.textRec = self.text.get_rect()
+        self.textRec.center = (845 / 2, 480 / 2)
+        self.screen.blit(self.text, self.textRec)
         self._activation_time = pygame.time.get_ticks()
 
     @flask_resource
     def scan_success(self):
-        self.scan_event(GREEN)
+        self.scan_event(BACKGROUND, GREEN, 'SUCCES')
         return "Scan success"
 
     @flask_resource
     def scan_failure(self):
-        self.scan_event(RED)
+        self.scan_event(BACKGROUND, RED, 'FAIL')
         return "Scan failure"
 
     @flask_resource
     def default(self):
-        return "hallo"
+        return "yeet"
 
     def add_all_rules(self):
         self.app.add_url_rule('/success', 'success', self.scan_success)
