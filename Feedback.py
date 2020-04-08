@@ -63,7 +63,7 @@ class Feedback:
     def scan_failure(self):
         self.scan_event(RED)
         return "Scan failure"
-    
+
     @flask_resource
     def default(self):
         return "hallo"
@@ -87,25 +87,24 @@ class Feedback:
             self.color = BACKGROUND
 
         while not self._quit:
-            try:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self._quit = True
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c and pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self._quit = True
 
-                if self._display_active:
-                    self._time_active = pygame.time.get_ticks() - self._activation_time
+            if self._display_active:
+                self._time_active = pygame.time.get_ticks() - self._activation_time
 
-                self.clock.tick(60)
-                pygame.display.flip()
+            self.clock.tick(60)
+            pygame.display.flip()
 
-                if self._time_active >= 1000:
-                    self.color = BACKGROUND
-                    self._display_active = False
-                    self._time_active = 0
-                    self.screen_update()
-            except KeyboardInterrupt:
-                self._quit = True
-                self.exit()
+            if self._time_active >= 1000:
+                self.color = BACKGROUND
+                self._display_active = False
+                self._time_active = 0
+                self.screen_update()
 
         self.exit()
 
