@@ -1,0 +1,8 @@
+turtle/
+venv/
+.idea/
+game.py
+donald.jpg
+test.py
+tof.jpg
+__pycache__/
